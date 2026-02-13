@@ -19,7 +19,6 @@ public enum CardType {
 
     private final int value;
 
-    // Конструктор
     CardType(int value) {
         this.value = value;
     }

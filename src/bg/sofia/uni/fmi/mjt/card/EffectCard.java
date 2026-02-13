@@ -6,4 +6,6 @@ import bg.sofia.uni.fmi.mjt.exception.NoColourSelectedException;
 public interface EffectCard {
 
     void applyEffect(GameController controller) throws NoColourSelectedException;
+
+    void reset();
 }

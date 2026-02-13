@@ -17,6 +17,7 @@ public class ChooseColourCard extends AbstractEffectCard {
         this.chosenColour = chosenColour;
     }
 
+    @Override
     public void reset() {
         this.chosenColour = CardColour.SPECIAL;
     }
@@ -33,4 +34,5 @@ public class ChooseColourCard extends AbstractEffectCard {
     public boolean isCardPlayable(Card topCard, CardColour activeColour) {
         return true;
     }
+
 }

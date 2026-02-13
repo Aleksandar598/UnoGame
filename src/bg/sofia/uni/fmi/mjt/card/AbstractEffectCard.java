@@ -5,4 +5,8 @@ public abstract class AbstractEffectCard extends AbstractStandardCard implements
     protected AbstractEffectCard(CardType type, CardColour colour, int cardID) {
         super(type, colour, cardID);
     }
+
+    @Override
+    public void reset() {
+    }
 }

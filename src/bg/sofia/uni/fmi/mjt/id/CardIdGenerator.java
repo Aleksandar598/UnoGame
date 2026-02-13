@@ -4,7 +4,7 @@ public class CardIdGenerator implements IdGenerator {
     long id = 1;
 
     @Override
-    public long getId() {
+    public int getId() {
         return id++;
     }
 }
