@@ -12,7 +12,7 @@ import java.util.Deque;
 import java.util.List;
 
 public class DeckCreator implements CardPileCreator {
-    IdGenerator generator;
+    private IdGenerator generator;
     private static final int FIRST_DIGIT_OF_CARDS = 1;
     private static final int LAST_DIGIT_OF_CARDS = 9;
     private static final int COUNT_OF_EACH_NORMAL_CARD = 2;

@@ -12,8 +12,8 @@ import java.util.List;
 
 public class UnoDeck implements Deck {
 
-    Deque<Card> pile;
-    Deque<Card> draw;
+    private Deque<Card> pile;
+    private Deque<Card> draw;
 
     public UnoDeck(CardPileCreator creator) {
         this.pile = new ArrayDeque<>();

@@ -19,4 +19,5 @@ public class PlusFourCard extends ChooseColourCard {
 
         controller.addCardForDraw(PENALTY_COUNT);
     }
+
 }

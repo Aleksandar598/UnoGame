@@ -1,7 +1,7 @@
 package bg.sofia.uni.fmi.mjt.id;
 
-public class CardIdGenerator implements IdGenerator {
-    private int id = 1;
+public class PlayerIdGenerator implements IdGenerator {
+    private int id = 0;
 
     @Override
     public int getId() {

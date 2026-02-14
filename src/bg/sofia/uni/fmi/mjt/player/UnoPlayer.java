@@ -1,22 +1,28 @@
 package bg.sofia.uni.fmi.mjt.player;
 
 import bg.sofia.uni.fmi.mjt.card.Card;
+import bg.sofia.uni.fmi.mjt.exception.CardNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class UnoPlayer implements Player {
 
-    List<Card> hand;
-    String name;
-    boolean hasSaidUno;
+    private List<Card> hand;
+    private String name;
+    private boolean hasSaidUno;
+    private boolean hasWon;
+    private int id;
+    private PlayerStatus status;
 
-    UnoPlayer(String name) {
+    public UnoPlayer(String name, int id) {
         this.name = name;
         this.hasSaidUno = false;
         this.hand = new ArrayList<>();
+        this.id = id;
+        this.hasWon = false;
+        this.status = PlayerStatus.NOT_IN_GAME;
     }
 
     @Override
@@ -38,7 +44,7 @@ public class UnoPlayer implements Player {
     }
 
     @Override
-    public Card playCard(int cardId) {
+    public Card playCard(int cardId) throws CardNotFoundException {
 
         for (Card c : this.hand) {
             if (c.getCardID() == cardId) {
@@ -46,7 +52,7 @@ public class UnoPlayer implements Player {
                 return c;
             }
         }
-        throw new NoSuchElementException("hand does not contain such element");
+        throw new CardNotFoundException("hand does not contain such element");
     }
 
     @Override
@@ -67,5 +73,30 @@ public class UnoPlayer implements Player {
     @Override
     public void resetUnoStatus() {
         this.hasSaidUno = false;
+    }
+
+    @Override
+    public boolean hasWon() {
+        return this.hasWon;
+    }
+
+    @Override
+    public void setHasWon(boolean hasWon) {
+        this.hasWon = hasWon;
+    }
+
+    @Override
+    public void setPlayerStatus(PlayerStatus status) {
+        this.status = status;
+    }
+
+    @Override
+    public PlayerStatus getPlayerStatus() {
+        return this.status;
+    }
+
+    @Override
+    public int getId() {
+        return this.id;
     }
 }

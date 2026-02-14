@@ -55,6 +55,18 @@ public abstract class AbstractStandardCard implements Card {
     }
 
     @Override
+    public String getCardAsString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("CardId: ")
+                .append(this.cardID)
+                .append(' ')
+                .append(this.colour.toString())
+                .append(' ')
+                .append(this.type.getLabel());
+        return builder.toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AbstractStandardCard unoCard = (AbstractStandardCard) o;
