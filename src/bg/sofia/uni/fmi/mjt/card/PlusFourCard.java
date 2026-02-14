@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.card;
 
-import bg.sofia.uni.fmi.mjt.GameController;
+import bg.sofia.uni.fmi.mjt.controller.GameController;
 import bg.sofia.uni.fmi.mjt.exception.NoColourSelectedException;
 
 public class PlusFourCard extends ChooseColourCard {
@@ -11,12 +11,10 @@ public class PlusFourCard extends ChooseColourCard {
     }
 
     @Override
-    public void applyEffect(GameController controller) throws NoColourSelectedException {
+    public void applyEffect(GameController controller) {
         if (controller == null) {
             throw new IllegalArgumentException("controller cannot be null");
         }
-        super.applyEffect(controller);
-
         controller.addCardForDraw(PENALTY_COUNT);
     }
 

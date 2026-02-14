@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.exception;
 
-public class NotAColourChangeCardException extends RuntimeException {
+public class NotAColourChangeCardException extends Exception {
     public NotAColourChangeCardException(String message) {
         super(message);
     }

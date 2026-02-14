@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.command;
 
-import bg.sofia.uni.fmi.mjt.GameController;
+import bg.sofia.uni.fmi.mjt.controller.GameController;
 import bg.sofia.uni.fmi.mjt.card.Card;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
@@ -39,7 +39,7 @@ public class SpectateOtherPlayerHand implements Command {
                 builder.append(iter++)
                         .append(". ")
                         .append(c.getCardAsString())
-                        .append('\n');
+                        .append(System.lineSeparator());
             }
             return builder.toString();
         } catch (PlayerNotFoundException e) {

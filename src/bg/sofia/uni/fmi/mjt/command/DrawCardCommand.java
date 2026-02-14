@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.command;
 
-import bg.sofia.uni.fmi.mjt.GameController;
+import bg.sofia.uni.fmi.mjt.controller.GameController;
 import bg.sofia.uni.fmi.mjt.card.Card;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
@@ -24,10 +24,14 @@ public class DrawCardCommand implements Command {
             if (controller.checkPlayerCanPlayAnyCards(playerId)) {
                 throw new UnoUserException("You can play a card");
             }
+            if (!controller.hasStarted()) {
+                throw new UnoUserException("Game has not started yet");
+            }
             Card c = controller.drawCard(playerId);
             StringBuilder drawnCard = new StringBuilder();
             drawnCard.append("Card drawn: ")
                     .append(c.getCardAsString());
+            controller.nextTurn();
             return drawnCard.toString();
         } catch (PlayerNotFoundException e) {
             throw new UnoUserException("Player not found", e);

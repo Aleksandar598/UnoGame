@@ -1,8 +1,7 @@
 package bg.sofia.uni.fmi.mjt.command;
 
-import bg.sofia.uni.fmi.mjt.GameController;
+import bg.sofia.uni.fmi.mjt.controller.GameController;
 import bg.sofia.uni.fmi.mjt.card.Card;
-import bg.sofia.uni.fmi.mjt.card.CardColour;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 import bg.sofia.uni.fmi.mjt.player.Player;
@@ -24,6 +23,10 @@ public class ShowHandCommand implements Command {
     @Override
     public String execute() throws UnoUserException {
         Player player;
+
+        if (!controller.hasStarted()) {
+            throw new UnoUserException("Game has not started yet");
+        }
 
         try {
             player = controller.getPlayer(playerId);

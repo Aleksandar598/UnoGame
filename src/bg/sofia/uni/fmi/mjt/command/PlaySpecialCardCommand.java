@@ -1,8 +1,9 @@
 package bg.sofia.uni.fmi.mjt.command;
 
-import bg.sofia.uni.fmi.mjt.GameController;
+import bg.sofia.uni.fmi.mjt.controller.GameController;
 import bg.sofia.uni.fmi.mjt.card.CardColour;
 import bg.sofia.uni.fmi.mjt.exception.CardNotFoundException;
+import bg.sofia.uni.fmi.mjt.exception.NoColourSelectedException;
 import bg.sofia.uni.fmi.mjt.exception.NotAColourChangeCardException;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
@@ -33,6 +34,11 @@ public class PlaySpecialCardCommand implements Command {
 
     @Override
     public String execute() throws UnoUserException {
+
+        if (!controller.hasStarted()) {
+            throw new UnoUserException("Game has not started yet");
+        }
+
         if (this.playerId != controller.getCurrentPlayer().getId()) {
             throw new UnoUserException("It is not your turn!");
         }
@@ -45,7 +51,10 @@ public class PlaySpecialCardCommand implements Command {
             throw new IllegalArgumentException("player not found", e);
         } catch (NotAColourChangeCardException e) {
             throw new UnoUserException("Card cannot change colour!");
+        } catch (NoColourSelectedException e) {
+            throw new UnoUserException("You have not selected a colour", e);
         }
+        controller.nextTurn();
 
         return SUCCESS_STRING;
     }

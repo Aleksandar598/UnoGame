@@ -5,5 +5,6 @@ public enum PlayerStatus {
     SPECTATING,
     PLAYING,
     NOT_IN_GAME,
-    WAITING_TO_START
+    WAITING_TO_START,
+    LOST_CONNECTION
 }

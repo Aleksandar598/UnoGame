@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.command;
 
-import bg.sofia.uni.fmi.mjt.GameController;
+import bg.sofia.uni.fmi.mjt.controller.GameController;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 import bg.sofia.uni.fmi.mjt.player.Player;
@@ -24,6 +24,9 @@ public class SpectateCommand implements Command {
     @Override
     public String execute() throws UnoUserException {
         try {
+            if (!controller.hasStarted()) {
+                throw new UnoUserException("Game has not started yet");
+            }
             Player player = controller.getPlayer(this.playerId);
 
             if (!player.hasWon()) {

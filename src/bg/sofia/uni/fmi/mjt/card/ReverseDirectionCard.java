@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.card;
 
-import bg.sofia.uni.fmi.mjt.GameController;
+import bg.sofia.uni.fmi.mjt.controller.GameController;
 
 public class ReverseDirectionCard extends AbstractEffectCard {
 

@@ -1,32 +1,26 @@
 package bg.sofia.uni.fmi.mjt.command;
 
 import bg.sofia.uni.fmi.mjt.controller.GameController;
-import bg.sofia.uni.fmi.mjt.card.Card;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 
-public class ShowLastCardCommand implements Command {
+public class ShowPlayedCardsCommand implements Command {
 
     private final GameController controller;
-
-    public ShowLastCardCommand(GameController controller) {
+    private final int playerId;
+    public ShowPlayedCardsCommand(GameController controller, int playerId) {
         if (controller == null) {
             throw new IllegalArgumentException("controller cannot be null");
         }
+
         this.controller = controller;
+        this.playerId = playerId;
     }
 
     @Override
     public String execute() throws UnoUserException {
-        StringBuilder stringBuilder = new StringBuilder();
-
         if (!controller.hasStarted()) {
             throw new UnoUserException("Game has not started yet");
         }
-
-        Card topCard = controller.getTopCard();
-        stringBuilder.append(topCard.getCardAsString())
-                .append(System.lineSeparator());
-
-        return stringBuilder.toString();
+        return controller.getPlayedCardsLog();
     }
 }

@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.command;
 
-import bg.sofia.uni.fmi.mjt.GameController;
+import bg.sofia.uni.fmi.mjt.controller.GameController;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 
@@ -18,6 +18,9 @@ public class AcceptEffectCommand implements  Command {
 
     @Override
     public String execute() throws UnoUserException {
+        if (!controller.hasStarted()) {
+            throw new UnoUserException("Game has not started yet");
+        }
         if (!this.controller.isTherePendingCardDraw()) {
             throw new UnoUserException("There is no penalty pending");
         }
@@ -25,18 +28,19 @@ public class AcceptEffectCommand implements  Command {
         if (this.playerId != this.controller.getCurrentPlayer().getId()) {
             throw new UnoUserException("It is not your turn to accept the penalty");
         }
-        String response = "Drawn " +
-                controller.penaltyCardCount() +
-                " cards";
+        StringBuilder response = new StringBuilder();
+        response.append("Drawn ")
+                .append(controller.penaltyCardCount())
+                .append(" cards:")
+                .append(System.lineSeparator());
 
         try {
-            controller.acceptPenalty(this.playerId);
+            String str =  controller.acceptPenalty(this.playerId);
+            response.append(str);
         } catch (PlayerNotFoundException e) {
             throw new IllegalArgumentException("Player not found", e);
         }
-        controller.resetPenalty();
         controller.nextTurn();
-
-        return response;
+        return response.toString();
     }
 }
