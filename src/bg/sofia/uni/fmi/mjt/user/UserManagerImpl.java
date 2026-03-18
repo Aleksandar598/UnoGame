@@ -16,6 +16,7 @@ public class UserManagerImpl implements UserManager {
         users = new HashMap<>();
         sessions = new HashMap<>();
     }
+
     @Override
     public synchronized String register(String username, String password) throws UserAlreadyExistsException {
         if (users.containsKey(username)) {
@@ -37,12 +38,13 @@ public class UserManagerImpl implements UserManager {
         }
 
         sessions.put(channel, username);
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
     @Override
     public void logout(SocketChannel channel) {
         if (channel == null) {
-            t
+
         }
 
     }

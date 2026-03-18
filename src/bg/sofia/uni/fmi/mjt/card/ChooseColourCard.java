@@ -1,17 +1,10 @@
 package bg.sofia.uni.fmi.mjt.card;
 
-import bg.sofia.uni.fmi.mjt.controller.GameController;
-import bg.sofia.uni.fmi.mjt.exception.NoColourSelectedException;
-
 public class ChooseColourCard extends AbstractEffectCard {
+    private static final CardColour DEFAULT_CARD_COLOUR = CardColour.SPECIAL;
 
     ChooseColourCard(CardType type, CardColour colour, int cardID) {
         super(type, colour, cardID);
-    }
-
-    @Override
-    public void applyEffect(GameController controller) {
-
     }
 
     @Override

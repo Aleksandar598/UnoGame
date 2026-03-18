@@ -11,10 +11,11 @@ public class PlusFourCard extends ChooseColourCard {
     }
 
     @Override
-    public void applyEffect(GameController controller) {
+    public void applyEffect(GameController controller) throws NoColourSelectedException {
         if (controller == null) {
             throw new IllegalArgumentException("controller cannot be null");
         }
+        super.applyEffect(controller);
         controller.addCardForDraw(PENALTY_COUNT);
     }
 

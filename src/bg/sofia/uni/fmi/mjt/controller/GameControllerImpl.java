@@ -187,7 +187,7 @@ public class GameControllerImpl implements GameController {
     }
 
     @Override
-    public void playCard(int playerId, int cardId, CardColour colour) throws CardNotFoundException, PlayerNotFoundException, NotAColourChangeCardException {
+    public void playCard(int playerId, int cardId, CardColour colour) throws CardNotFoundException, PlayerNotFoundException, NotAColourChangeCardException, NoColourSelectedException {
         Card c = findCard(playerId, cardId);
 
         if (c.getCardColour() != CardColour.SPECIAL) {
@@ -201,7 +201,7 @@ public class GameControllerImpl implements GameController {
         applyCardEffect(c);
     }
 
-    private void applyCardEffect(Card c) {
+    private void applyCardEffect(Card c) throws NoColourSelectedException {
         if (c instanceof EffectCard) {
             ((EffectCard) c).applyEffect(this);
         }

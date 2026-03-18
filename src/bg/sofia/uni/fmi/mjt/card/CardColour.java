@@ -5,6 +5,7 @@ public enum CardColour {
     BLUE,
     YELLOW,
     GREEN,
-    SPECIAL
+    SPECIAL,
+    NOT_SELECTED
 
 }
