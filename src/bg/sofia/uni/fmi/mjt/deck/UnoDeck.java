@@ -1,9 +1,12 @@
 package bg.sofia.uni.fmi.mjt.deck;
 
 import bg.sofia.uni.fmi.mjt.card.Card;
+import bg.sofia.uni.fmi.mjt.card.ColourChangingCard;
 import bg.sofia.uni.fmi.mjt.card.EffectCard;
+import bg.sofia.uni.fmi.mjt.card.Resettable;
 import bg.sofia.uni.fmi.mjt.deck.creator.CardPileCreator;
 
+import java.sql.ResultSet;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,8 +54,8 @@ public class UnoDeck implements Deck {
         pile.add(topCard);
 
         for (Card c : draw) {
-            if (c instanceof EffectCard) {
-                ((EffectCard) c).reset();
+            if (c instanceof Resettable) {
+                ((Resettable) c).reset();
             }
         }
     }

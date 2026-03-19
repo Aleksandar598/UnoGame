@@ -7,7 +7,4 @@ public interface EffectCard {
 
     void applyEffect(GameController controller) throws NoColourSelectedException;
 
-    void reset();
-
-    void setChosenColour(CardColour colour);
 }

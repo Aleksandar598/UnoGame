@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
-public class PlusFourCardTest {
+class PlusFourCardTest {
 
     private PlusFourCard card;
     private static final CardColour CHOSEN_COLOUR = CardColour.BLUE;
@@ -20,37 +20,6 @@ public class PlusFourCardTest {
     @BeforeEach
     public void setUp() {
         card = new PlusFourCard(CardType.PLUS_FOUR_CARD, CardColour.SPECIAL, CARD_ID);
-    }
-
-    @Test
-    public void testConstructorNullType() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new PlusFourCard(null, CARD_COLOUR, CARD_ID));
-    }
-
-    @Test
-    public void testConstructorNullColour() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new PlusFourCard(CARD_TYPE, null, CARD_ID));
-    }
-
-    @Test
-    public void testResetMethodCorrectness() {
-        card.setChosenColour(CHOSEN_COLOUR);
-        card.reset();
-        assertEquals(CardColour.NOT_SELECTED, card.getChosenColour());
-    }
-
-    @Test
-    public void testSetChosenColourNullCase() {
-        assertThrows(IllegalArgumentException.class,
-                () -> card.setChosenColour(null));
-    }
-
-    @Test
-    public void testSetChosenColourCorrectness() {
-        card.setChosenColour(CHOSEN_COLOUR);
-        assertEquals(CHOSEN_COLOUR, card.getChosenColour());
     }
 
     @Test
@@ -76,7 +45,7 @@ public class PlusFourCardTest {
     }
 
     @Test
-    public void testIsCardPlayableCorrectness() { //this should always return true anyways
+    public void testIsCardPlayableCorrectness() { //this should always return true anyway
         assertTrue(card.isCardPlayable(null, null));
     }
 

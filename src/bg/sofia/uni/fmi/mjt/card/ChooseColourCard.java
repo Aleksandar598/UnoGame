@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.card;
 
-public class ChooseColourCard extends AbstractEffectCard {
+public class ChooseColourCard extends AbstractColourChangingCard {
     private static final CardColour DEFAULT_CARD_COLOUR = CardColour.SPECIAL;
 
     ChooseColourCard(CardType type, CardColour colour, int cardID) {
