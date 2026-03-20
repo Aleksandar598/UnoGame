@@ -37,11 +37,7 @@ public class DeckCreator implements CardPileCreator {
     private List<Card> createDeck() {
         List<Card> cards = new ArrayList<>();
 
-        for (CardColour c : CardColour.values()) {
-
-            if (c == CardColour.SPECIAL) {
-                continue;
-            }
+        for (CardColour c : CardColour.getPlayableColours()) {
             addColoredCards(cards, c);
         }
         addJokers(cards);
