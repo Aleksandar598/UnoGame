@@ -11,15 +11,29 @@ public class GameLogger implements Logger {
     int winnerCount = 1;
 
     @Override
-    public void logCard(Card c) {
+    public void logCard(Card c, Player p) {
+
+        if (c == null) {
+            throw new IllegalArgumentException("c cannot be null");
+        }
+        if (p == null) {
+            throw new IllegalArgumentException("p cannot be null");
+        }
+
         this.cardLogger.append(cardCount++)
                 .append(". ")
+                .append(p.getName())
+                .append(": ")
                 .append(c.getCardAsString())
                 .append(System.lineSeparator());
     }
 
     @Override
     public void logWinner(Player p) {
+        if (p == null) {
+            throw new IllegalArgumentException("p cannot be null");
+        }
+
         this.winnerLogger.append(winnerCount++)
                 .append(". ")
                 .append(p.getName())

@@ -5,7 +5,7 @@ import bg.sofia.uni.fmi.mjt.player.Player;
 
 public interface Logger {
 
-    void logCard(Card c);
+    void logCard(Card c, Player p);
 
     void logWinner(Player p);
 

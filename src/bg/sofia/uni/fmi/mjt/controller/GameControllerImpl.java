@@ -175,13 +175,14 @@ public class GameControllerImpl implements GameController {
     @Override
     public void playCard(int playerId, int cardId) throws CardNotFoundException, PlayerNotFoundException, NoColourSelectedException {
         Card c = findCard(playerId, cardId);
+        Player p = getPlayer(playerId);
 
         if (c.getCardColour() == CardColour.SPECIAL) {
             throw new NoColourSelectedException("Card is a joker but no colour has been selected");
         }
         deck.playCard(c);
         applyCardEffect(c);
-        logger.logCard(c);
+        logger.logCard(c, p);
         getPlayer(playerId).getCards().remove(c);
         checkForWinner(playerId);
     }
@@ -189,6 +190,7 @@ public class GameControllerImpl implements GameController {
     @Override
     public void playCard(int playerId, int cardId, CardColour colour) throws CardNotFoundException, PlayerNotFoundException, NotAColourChangeCardException, NoColourSelectedException {
         Card c = findCard(playerId, cardId);
+        Player p = getPlayer(playerId);
 
         if (c.getCardColour() != CardColour.SPECIAL) {
             throw new NotAColourChangeCardException("Card is not a colour change card");
@@ -196,7 +198,7 @@ public class GameControllerImpl implements GameController {
         deck.playCard(c);
         currentColour = colour;
         getPlayer(playerId).getCards().remove(c);
-        logger.logCard(c);
+        logger.logCard(c, p);
         checkForWinner(playerId);
         applyCardEffect(c);
     }

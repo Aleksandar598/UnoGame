@@ -33,7 +33,7 @@ class UnoDeckTest {
     private UnoDeck deck;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         Deque<Card> testCards = new ArrayDeque<>();
         testCards.add(FIRST_CARD);
         testCards.add(SECOND_CARD);
