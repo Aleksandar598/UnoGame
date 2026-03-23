@@ -3,8 +3,10 @@ package bg.sofia.uni.fmi.mjt.card;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+
 
 class ChooseColourCardTest {
     private ChooseColourCard card;

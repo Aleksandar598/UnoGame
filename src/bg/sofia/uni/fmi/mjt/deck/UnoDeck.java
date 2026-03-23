@@ -16,6 +16,11 @@ public class UnoDeck implements Deck {
     private Deque<Card> draw;
 
     public UnoDeck(CardPileCreator creator) {
+
+        if (creator == null) {
+            throw new IllegalArgumentException("creator cannot be null");
+        }
+
         this.pile = new ArrayDeque<>();
         this.draw = creator.getDeck();
         pile.add(draw.pop());
@@ -26,12 +31,15 @@ public class UnoDeck implements Deck {
         if (draw.isEmpty()) {
             recyclePile();
         }
-
         return draw.pop();
     }
 
     @Override
     public void playCard(Card card) {
+
+        if (card == null) {
+            throw new IllegalArgumentException("card cannot be null");
+        }
         pile.add(card);
     }
 

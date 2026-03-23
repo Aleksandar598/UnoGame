@@ -6,10 +6,14 @@ import bg.sofia.uni.fmi.mjt.card.CardType;
 import bg.sofia.uni.fmi.mjt.id.CardIdGenerator;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Executable;
-import java.util.*;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 class DeckCreatorTest {
 
