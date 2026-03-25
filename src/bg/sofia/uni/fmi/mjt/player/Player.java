@@ -2,6 +2,7 @@ package bg.sofia.uni.fmi.mjt.player;
 
 import bg.sofia.uni.fmi.mjt.card.Card;
 import bg.sofia.uni.fmi.mjt.exception.CardNotFoundException;
+import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface Player {
 
     boolean hasUno();
 
-    void sayUno();
+    void sayUno() throws UnoUserException;
 
     boolean hasSaidUno();
 

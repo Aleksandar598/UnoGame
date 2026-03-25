@@ -2,6 +2,7 @@ package bg.sofia.uni.fmi.mjt.player;
 
 import bg.sofia.uni.fmi.mjt.card.Card;
 import bg.sofia.uni.fmi.mjt.exception.CardNotFoundException;
+import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,8 +16,12 @@ public class UnoPlayer implements Player {
     private boolean hasWon;
     private int id;
     private PlayerStatus status;
+    private static final int UNO_CARD_COUNT = 1;
 
     public UnoPlayer(String name, int id) {
+        if (name == null) {
+            throw new IllegalArgumentException("Name cannot be null");
+        }
         this.name = name;
         this.hasSaidUno = false;
         this.hand = new ArrayList<>();
@@ -61,7 +66,10 @@ public class UnoPlayer implements Player {
     }
 
     @Override
-    public void sayUno() {
+    public void sayUno() throws UnoUserException {
+        if (hand.size() > UNO_CARD_COUNT) {
+            throw new UnoUserException("Cannot say UNO with 2 or more cards");
+        }
         this.hasSaidUno = true;
     }
 
