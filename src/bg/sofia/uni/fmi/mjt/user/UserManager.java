@@ -1,8 +1,10 @@
 package bg.sofia.uni.fmi.mjt.user;
 
 import bg.sofia.uni.fmi.mjt.exception.UserAlreadyExistsException;
+import bg.sofia.uni.fmi.mjt.exception.UserNotLoggedInException;
 import bg.sofia.uni.fmi.mjt.exception.WrongUserCredentialsException;
 
+import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 public interface UserManager {
@@ -15,7 +17,7 @@ public interface UserManager {
 
     boolean isLoggedIn(SocketChannel channel);
 
-    String getUsername(SocketChannel channel);
+    String getUsername(SocketChannel channel) throws UserNotLoggedInException;
 
-    void save();
+    void save() throws IOException;
 }

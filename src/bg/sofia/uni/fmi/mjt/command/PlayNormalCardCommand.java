@@ -1,11 +1,7 @@
 package bg.sofia.uni.fmi.mjt.command;
 
 import bg.sofia.uni.fmi.mjt.controller.GameController;
-import bg.sofia.uni.fmi.mjt.exception.CardNotFoundException;
-import bg.sofia.uni.fmi.mjt.exception.NoColourSelectedException;
-import bg.sofia.uni.fmi.mjt.exception.NotAColourChangeCardException;
-import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
-import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
+import bg.sofia.uni.fmi.mjt.exception.*;
 
 public class PlayNormalCardCommand implements Command {
 
@@ -43,6 +39,8 @@ public class PlayNormalCardCommand implements Command {
             throw new IllegalArgumentException("player not found", e);
         } catch (NoColourSelectedException e) {
             throw new UnoUserException("Card needs to have colour selected", e);
+        } catch (CannotPlayCardException e) {
+            throw new UnoUserException("Cannot play card", e);
         }
         controller.nextTurn();
         return SUCCESS_STRING;

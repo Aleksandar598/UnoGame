@@ -2,15 +2,10 @@ package bg.sofia.uni.fmi.mjt.controller;
 
 import bg.sofia.uni.fmi.mjt.card.Card;
 import bg.sofia.uni.fmi.mjt.card.CardColour;
+import bg.sofia.uni.fmi.mjt.card.ChooseColourCard;
 import bg.sofia.uni.fmi.mjt.card.EffectCard;
 import bg.sofia.uni.fmi.mjt.deck.Deck;
-import bg.sofia.uni.fmi.mjt.exception.CannotStartGameException;
-import bg.sofia.uni.fmi.mjt.exception.CardNotFoundException;
-import bg.sofia.uni.fmi.mjt.exception.GameHasStartedException;
-import bg.sofia.uni.fmi.mjt.exception.MaximumPlayerCountReached;
-import bg.sofia.uni.fmi.mjt.exception.NoColourSelectedException;
-import bg.sofia.uni.fmi.mjt.exception.NotAColourChangeCardException;
-import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
+import bg.sofia.uni.fmi.mjt.exception.*;
 import bg.sofia.uni.fmi.mjt.logger.GameLogger;
 import bg.sofia.uni.fmi.mjt.logger.Logger;
 import bg.sofia.uni.fmi.mjt.player.Player;
@@ -32,6 +27,7 @@ public class GameControllerImpl implements GameController {
     private final int gameCreator;
 
     private static final int MIN_AMOUNT_OF_PLAYERS = 2;
+    private static final List<CardColour> PLAYABLE_COLOURS = List.of(CardColour.GREEN, CardColour.BLUE, CardColour.YELLOW, CardColour.RED);
     private static final int MAX_AMOUNT_OF_PLAYERS = 8;
     private static final int STARTING_CARD_COUNT = 7;
 
@@ -74,6 +70,10 @@ public class GameControllerImpl implements GameController {
     @Override
     public void reversePlayerDirection() {
         clockWise = !clockWise;
+
+        if (playerList.size() == 2) {
+            skipNextPlayer();
+        }
     }
 
     @Override
@@ -173,31 +173,54 @@ public class GameControllerImpl implements GameController {
     }
 
     @Override
-    public void playCard(int playerId, int cardId) throws CardNotFoundException, PlayerNotFoundException, NoColourSelectedException {
+    public void playCard(int playerId, int cardId) throws CardNotFoundException, PlayerNotFoundException, NoColourSelectedException, CannotPlayCardException {
         Card c = findCard(playerId, cardId);
         Player p = getPlayer(playerId);
+
+        if (isTherePendingCardDraw()) {
+            throw new CannotPlayCardException("You must accept the pending effect");
+        }
 
         if (c.getCardColour() == CardColour.SPECIAL) {
             throw new NoColourSelectedException("Card is a joker but no colour has been selected");
         }
+
+        if (!c.isCardPlayable(deck.getLastPlayedCard(), this.currentColour)) {
+            throw new CannotPlayCardException("Card Cannot be Played");
+        }
+
         deck.playCard(c);
         applyCardEffect(c);
         logger.logCard(c, p);
-        getPlayer(playerId).getCards().remove(c);
+        getPlayer(playerId).playCard(cardId);
         checkForWinner(playerId);
     }
 
     @Override
-    public void playCard(int playerId, int cardId, CardColour colour) throws CardNotFoundException, PlayerNotFoundException, NotAColourChangeCardException, NoColourSelectedException {
+    public void playCard(int playerId, int cardId, CardColour colour) throws CardNotFoundException, PlayerNotFoundException, NotAColourChangeCardException, NoColourSelectedException, CannotPlayCardException {
         Card c = findCard(playerId, cardId);
         Player p = getPlayer(playerId);
+
+        if (isTherePendingCardDraw()) {
+            throw new CannotPlayCardException("You must accept the pending effect");
+        }
 
         if (c.getCardColour() != CardColour.SPECIAL) {
             throw new NotAColourChangeCardException("Card is not a colour change card");
         }
+        if (!c.isCardPlayable(deck.getLastPlayedCard(), this.currentColour)) {
+            throw new CannotPlayCardException("Card Cannot be Played");
+        }
+        if (!PLAYABLE_COLOURS.contains(colour)) {
+            throw new IllegalArgumentException("Colour is not a playable colour");
+        }
+
         deck.playCard(c);
         currentColour = colour;
-        getPlayer(playerId).getCards().remove(c);
+        if (c instanceof ChooseColourCard) {
+            ((ChooseColourCard) c).setChosenColour(colour);
+        }
+        getPlayer(playerId).playCard(cardId);
         logger.logCard(c, p);
         checkForWinner(playerId);
         applyCardEffect(c);
