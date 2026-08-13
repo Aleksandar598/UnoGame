@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.logger;
 
-import bg.sofia.uni.fmi.mjt.card.Card;
+import bg.sofia.uni.fmi.mjt.game.card.Card;
 import bg.sofia.uni.fmi.mjt.player.Player;
 
 public class GameLogger implements Logger {

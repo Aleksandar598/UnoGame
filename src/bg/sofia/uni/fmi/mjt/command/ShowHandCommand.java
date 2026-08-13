@@ -1,7 +1,7 @@
 package bg.sofia.uni.fmi.mjt.command;
 
-import bg.sofia.uni.fmi.mjt.controller.GameController;
-import bg.sofia.uni.fmi.mjt.card.Card;
+import bg.sofia.uni.fmi.mjt.game.controller.GameController;
+import bg.sofia.uni.fmi.mjt.game.card.Card;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 import bg.sofia.uni.fmi.mjt.player.Player;

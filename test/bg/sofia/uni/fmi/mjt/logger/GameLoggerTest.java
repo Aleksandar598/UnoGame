@@ -1,6 +1,6 @@
 package bg.sofia.uni.fmi.mjt.logger;
 
-import bg.sofia.uni.fmi.mjt.card.Card;
+import bg.sofia.uni.fmi.mjt.game.card.Card;
 import bg.sofia.uni.fmi.mjt.player.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
