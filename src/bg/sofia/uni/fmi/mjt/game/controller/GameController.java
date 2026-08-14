@@ -49,7 +49,5 @@ public interface GameController {
 
     String getWinnerLog();
 
-    Player getCreator() throws PlayerNotFoundException;
-
     void startGame() throws CannotStartGameException;
 }

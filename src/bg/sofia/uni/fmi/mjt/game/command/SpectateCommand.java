@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.command;
+package bg.sofia.uni.fmi.mjt.game.command;
 
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
@@ -6,7 +6,7 @@ import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 import bg.sofia.uni.fmi.mjt.player.Player;
 import bg.sofia.uni.fmi.mjt.player.PlayerStatus;
 
-public class SpectateCommand implements Command {
+public class SpectateCommand implements GameCommand {
 
     private int playerId;
     private GameController controller;

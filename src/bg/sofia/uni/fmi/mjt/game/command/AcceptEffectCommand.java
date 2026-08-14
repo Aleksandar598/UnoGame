@@ -1,10 +1,10 @@
-package bg.sofia.uni.fmi.mjt.command;
+package bg.sofia.uni.fmi.mjt.game.command;
 
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 
-public class AcceptEffectCommand implements  Command {
+public class AcceptEffectCommand implements GameCommand {
     private final  int playerId;
     private final GameController controller;
     

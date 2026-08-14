@@ -36,8 +36,8 @@ class GameControllerImplTest {
     @BeforeEach
     void setUp() {
         deck = new StubDeck(TOP_CARD, FIRST_DRAWN_CARD, SECOND_DRAWN_CARD, THIRD_DRAWN_CARD);
-        creator = new UnoPlayer("creator", 1);
-        controller = new GameControllerImpl(deck, creator);
+
+        controller = new GameControllerImpl(deck);
     }
 
     @Test

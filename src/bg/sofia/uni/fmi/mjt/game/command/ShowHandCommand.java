@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.command;
+package bg.sofia.uni.fmi.mjt.game.command;
 
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;
 import bg.sofia.uni.fmi.mjt.game.card.Card;
@@ -8,7 +8,7 @@ import bg.sofia.uni.fmi.mjt.player.Player;
 
 import java.util.List;
 
-public class ShowHandCommand implements Command {
+public class ShowHandCommand implements GameCommand {
 
     private final GameController controller;
     private final int playerId;

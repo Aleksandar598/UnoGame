@@ -1,10 +1,10 @@
-package bg.sofia.uni.fmi.mjt.command;
+package bg.sofia.uni.fmi.mjt.game.command;
 
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;
 import bg.sofia.uni.fmi.mjt.game.card.Card;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 
-public class ShowLastCardCommand implements Command {
+public class ShowLastCardCommand implements GameCommand {
 
     private final GameController controller;
 

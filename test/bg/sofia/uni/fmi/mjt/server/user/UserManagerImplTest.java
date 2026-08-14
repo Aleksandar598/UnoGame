@@ -23,7 +23,7 @@ class UserManagerImplTest {
 
     @BeforeEach
     void setUp() {
-        userManager = new UserManagerImpl();
+        userManager = UserManagerImpl.getInstance();
         mockChannel1 = Mockito.mock(SocketChannel.class);
     }
 

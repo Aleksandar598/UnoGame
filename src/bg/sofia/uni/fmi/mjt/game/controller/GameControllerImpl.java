@@ -24,14 +24,13 @@ public class GameControllerImpl implements GameController {
     private CardColour currentColour;
     private boolean hasStarted = false;
     private Logger logger;
-    private final int gameCreator;
 
     private static final int MIN_AMOUNT_OF_PLAYERS = 2;
     private static final List<CardColour> PLAYABLE_COLOURS = List.of(CardColour.GREEN, CardColour.BLUE, CardColour.YELLOW, CardColour.RED);
-    private static final int MAX_AMOUNT_OF_PLAYERS = 8;
+    public static final int MAX_AMOUNT_OF_PLAYERS = 8;
     private static final int STARTING_CARD_COUNT = 7;
 
-    public GameControllerImpl(Deck deck, Player creator) {
+    public GameControllerImpl(Deck deck) {
         if (deck == null) {
             throw new IllegalArgumentException("deck cannot be null");
         }
@@ -39,7 +38,6 @@ public class GameControllerImpl implements GameController {
         currentColour = deck.getLastPlayedCard().getCardColour();
         playerList = new ArrayList<>();
         this.logger = new GameLogger();
-        this.gameCreator = creator.getId();
     }
 
     @Override
@@ -290,11 +288,6 @@ public class GameControllerImpl implements GameController {
     @Override
     public String getWinnerLog() {
         return logger.getWinnerLog();
-    }
-
-    @Override
-    public Player getCreator() throws PlayerNotFoundException {
-        return getPlayer(gameCreator);
     }
 
     public boolean hasStarted() {

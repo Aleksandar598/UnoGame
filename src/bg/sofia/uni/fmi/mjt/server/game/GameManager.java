@@ -2,23 +2,29 @@ package bg.sofia.uni.fmi.mjt.server.game;
 
 import bg.sofia.uni.fmi.mjt.exception.*;
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;
+import bg.sofia.uni.fmi.mjt.player.Player;
+import bg.sofia.uni.fmi.mjt.server.exception.GameNotFoundException;
 
 import java.util.List;
 
 public interface GameManager {
 
-    void createGame(int gameId, String creatorName);
+    void createGame(String gameId, String creatorName, int playerCount);
 
-    List<GameController> listGames();
+    List<GameInfo> listGames();
 
-    void joinGame(int gameId, String username) throws MaximumPlayerCountReached, GameHasStartedException;
+    GameInfo getGame(String gameId) throws GameNotFoundException;
 
-    void startGame(int gameId, String username) throws PlayerNotFoundException, CannotStartGameException, UnoUserException;
+    void joinGame(String gameId, Player player) throws MaximumPlayerCountReached, GameHasStartedException, GameNotFoundException;
 
-    void leaveGame(String username) throws UnoUserException, PlayerNotFoundException;
+    void startGame(Player player, String username) throws PlayerNotFoundException, CannotStartGameException, UnoUserException;
 
-    GameController getGameController(int gameId);
+    void leaveGame(Player player) throws UnoUserException, PlayerNotFoundException;
 
-    GameController getUserGame(String username);
+    GameController getGameController(String gameId) throws GameNotFoundException;
+
+    GameController getUserGame(Player player);
+
+    void notifyAllInAGame(Player player, String message);
 
 }

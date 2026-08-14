@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.command;
+package bg.sofia.uni.fmi.mjt.game.command;
 
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;
 import bg.sofia.uni.fmi.mjt.game.card.Card;
@@ -7,7 +7,7 @@ import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 import bg.sofia.uni.fmi.mjt.player.Player;
 import bg.sofia.uni.fmi.mjt.player.PlayerStatus;
 
-public class SpectateOtherPlayerHand implements Command {
+public class SpectateOtherPlayerHand implements GameCommand {
     private final int wantedPlayer;
     private final int playerId;
     private final GameController controller;

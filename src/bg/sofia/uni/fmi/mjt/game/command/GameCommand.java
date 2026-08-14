@@ -1,8 +1,8 @@
-package bg.sofia.uni.fmi.mjt.command;
+package bg.sofia.uni.fmi.mjt.game.command;
 
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 
-public interface Command {
+public interface GameCommand {
 
     String execute() throws UnoUserException;
 }

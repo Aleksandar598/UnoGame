@@ -10,17 +10,20 @@ import bg.sofia.uni.fmi.mjt.id.IdGenerator;
 import bg.sofia.uni.fmi.mjt.id.PlayerIdGenerator;
 import bg.sofia.uni.fmi.mjt.player.Player;
 import bg.sofia.uni.fmi.mjt.player.UnoPlayer;
+import bg.sofia.uni.fmi.mjt.server.exception.GameNotFoundException;
+import bg.sofia.uni.fmi.mjt.server.exception.UserInGameException;
+import bg.sofia.uni.fmi.mjt.server.user.UserManager;
+import bg.sofia.uni.fmi.mjt.server.user.UserManagerImpl;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameManagerImpl implements GameManager {
 
-    private final IdGenerator playerIdGenerator;
-    private final Map<Integer, GameController> managedGamesById;
-    private final Map<Integer, Integer> gameIdByUserId;
-    private final Map<String, Player> playerByUsername;
+    private final Map<String, GameController> managedGamesById;
+    private final Map<String, GameInfo> gamesInfoById;
+    private final Map<Integer, String> gameIdByUserId;
+    private final Set<Integer> playersInGame;
     private static final GameManagerImpl INSTANCE = new GameManagerImpl();
 
 
@@ -30,72 +33,90 @@ public class GameManagerImpl implements GameManager {
     }
 
     private GameManagerImpl() {
-        playerIdGenerator = new PlayerIdGenerator();
         managedGamesById = new ConcurrentHashMap<>();
         gameIdByUserId = new ConcurrentHashMap<>();
-        playerByUsername = new ConcurrentHashMap<>();
+        gamesInfoById = new ConcurrentHashMap<>();
+        playersInGame = new HashSet<>();
+
     }
     @Override
-    public void createGame(int gameId, String creatorName) {
-        Player unoPlayer = new UnoPlayer(creatorName, playerIdGenerator.getId());
-        GameController controller = new GameControllerImpl(new UnoDeck(new DeckCreator(new CardIdGenerator())), unoPlayer);
+    public void createGame(String gameId, String creatorName, int playerCount) {
+        GameController controller = new GameControllerImpl(new UnoDeck(new DeckCreator(new CardIdGenerator())));
+        GameInfo info = new GameInfo(gameId, creatorName, GameStatus.AVAILABLE, new ArrayList<>(), playerCount);
         managedGamesById.put(gameId, controller);
-        gameIdByUserId.put(unoPlayer.getId(), gameId);
-        playerByUsername.put(creatorName, unoPlayer);
+        gamesInfoById.put(gameId, info);
     }
 
     @Override
-    public List<GameController> listGames() {
-        return List.copyOf(managedGamesById.values());
+    public List<GameInfo> listGames() {
+        return List.copyOf(gamesInfoById.values());
     }
 
     @Override
-    public void joinGame(int gameId, String username) throws MaximumPlayerCountReached, GameHasStartedException {
-        Player unoPlayer = new UnoPlayer(username, playerIdGenerator.getId());
+    public GameInfo getGame(String gameId) throws GameNotFoundException {
+        if (!gamesInfoById.containsKey(gameId)) {
+            throw new GameNotFoundException(gameId);
+        }
+        return gamesInfoById.get(gameId);
+    }
+
+    @Override
+    public void joinGame(String gameId, Player player) throws MaximumPlayerCountReached, GameHasStartedException, GameNotFoundException {
         if (!managedGamesById.containsKey(gameId)) {
-            throw new IllegalArgumentException("Game with id " + gameId + " does not exist");
+            throw new GameNotFoundException("Game with id " + gameId + " does not exist");
+        }
+        if (playersInGame.contains(player.getId())) {
+            throw new UserInGameException("User is already in game");
         }
         GameController controller = managedGamesById.get(gameId);
-        controller.addPlayer(unoPlayer);
-        gameIdByUserId.put(unoPlayer.getId(), gameId);
-        playerByUsername.put(username, unoPlayer);
+        controller.addPlayer(player);
+        gameIdByUserId.put(player.getId(), gameId);
+        playersInGame.add(player.getId());
     }
 
     @Override
-    public void startGame(int gameId, String username) throws PlayerNotFoundException, CannotStartGameException, UnoUserException {
-        GameController controller = managedGamesById.get(gameId);
-        if (!username.equals(controller.getCreator().getName())) {
+    public void startGame(Player player, String username) throws PlayerNotFoundException, CannotStartGameException, UnoUserException {
+        GameController controller = this.getUserGame(player);
+        UserManager userManager = UserManagerImpl.getInstance();
+        GameInfo info = this.gamesInfoById.get(gameIdByUserId.get(player.getId()));
+        if (!player.getName().equals(info.creatorUsername())) {
             throw new UnoUserException("Player is not the creator");
         }
         controller.startGame();
     }
 
     @Override
-    public void leaveGame(String username) throws UnoUserException, PlayerNotFoundException {
-        Player unoPlayer;
+    public void leaveGame(Player player) throws UnoUserException, PlayerNotFoundException {
         GameController controller;
         try {
-            unoPlayer = playerByUsername.get(username);
-            controller = managedGamesById.get(unoPlayer.getId());
+
+            controller = managedGamesById.get(gameIdByUserId.get(player.getId()));
         } catch (RuntimeException e) {
-            throw new UnoUserException("Could not remove player form game", e);
+            throw new UnoUserException("Could not remove player from game", e);
         }
-        controller.removePlayer(unoPlayer.getId());
+        controller.removePlayer(player.getId());
     }
 
     @Override
-    public GameController getGameController(int gameId) {
+    public GameController getGameController(String gameId) throws GameNotFoundException {
         if (managedGamesById.containsKey(gameId)) {
             return managedGamesById.get(gameId);
         }
-        throw new IllegalArgumentException("Game with id " + gameId + " does not exist");
+        throw new GameNotFoundException("Game with id " + gameId + " does not exist");
     }
 
     @Override
-    public GameController getUserGame(String username) {
-        if (managedGamesById.containsKey(gameIdByUserId.get(username))) {
-            return managedGamesById.get(gameIdByUserId.get(username));
+    public GameController getUserGame(Player player) {
+        int userId = player.getId();
+        if (managedGamesById.containsKey(gameIdByUserId.get(userId))) {
+            return managedGamesById.get(gameIdByUserId.get(userId));
         }
         throw new IllegalArgumentException("Game not found");
+    }
+
+    @Override
+    public void notifyAllInAGame(Player player, String message) {
+        UserManager userManager = UserManagerImpl.getInstance();
+
     }
 }
