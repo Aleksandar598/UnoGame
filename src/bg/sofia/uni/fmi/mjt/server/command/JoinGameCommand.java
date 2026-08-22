@@ -30,7 +30,7 @@ public class JoinGameCommand extends AbstractCommand {
     private static final String MAX_PLAYER_COUNT = "Game you want to join is full";
     private static final String GAME_STARTED = "Game has already started";
     private static final String GAME_NOT_FOUND = "Game has not been found";
-    private static final String SUCCESS = "successfully joined game";
+    private static final String SUCCESS = " successfully joined game";
     private static final String INVALID_ARGS = "Invalid arguments";
 
     public JoinGameCommand() {
