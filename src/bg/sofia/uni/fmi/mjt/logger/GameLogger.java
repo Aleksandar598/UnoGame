@@ -5,8 +5,8 @@ import bg.sofia.uni.fmi.mjt.player.Player;
 
 public class GameLogger implements Logger {
 
-    private StringBuffer cardLogger = new StringBuffer();
-    private StringBuffer winnerLogger = new StringBuffer();
+    private final StringBuffer cardLogger = new StringBuffer();
+    private final StringBuffer winnerLogger = new StringBuffer();
     int cardCount = 1;
     int winnerCount = 1;
 

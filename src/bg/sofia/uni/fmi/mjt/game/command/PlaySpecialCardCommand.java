@@ -1,8 +1,18 @@
 package bg.sofia.uni.fmi.mjt.game.command;
 
+import bg.sofia.uni.fmi.mjt.exception.CannotPlayCardException;
+import bg.sofia.uni.fmi.mjt.exception.CardNotFoundException;
+import bg.sofia.uni.fmi.mjt.exception.GameNotStartedException;
+import bg.sofia.uni.fmi.mjt.exception.NoColourSelectedException;
+import bg.sofia.uni.fmi.mjt.exception.NotAColourChangeCardException;
+import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
+import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;
 import bg.sofia.uni.fmi.mjt.game.card.CardColour;
-import bg.sofia.uni.fmi.mjt.exception.*;
+
+import bg.sofia.uni.fmi.mjt.server.exception.ExceptionLogger;
+
+import java.io.IOException;
 
 public class PlaySpecialCardCommand implements GameCommand {
 
@@ -10,7 +20,6 @@ public class PlaySpecialCardCommand implements GameCommand {
     private final int playerId;
     private final int cardId;
     private final CardColour colour;
-    private static final String SUCCESS_STRING = "Success";
 
     public PlaySpecialCardCommand(GameController controller, int playerId, int cardId, CardColour colour) {
         this.cardId = cardId;
@@ -29,32 +38,18 @@ public class PlaySpecialCardCommand implements GameCommand {
     }
 
     @Override
-    public String execute() throws UnoUserException {
-
-        if (!controller.hasStarted()) {
-            throw new UnoUserException("Game has not started yet");
-        }
-
-        if (this.playerId != controller.getCurrentPlayer().getId()) {
-            throw new UnoUserException("It is not your turn!");
-        }
-
+    public String execute() throws UnoUserException, IOException {
+        String card;
         try {
-            controller.playCard(playerId, cardId, colour);
-        } catch (CardNotFoundException e) {
-            throw new UnoUserException("No such card in your deck", e);
-        } catch (PlayerNotFoundException e) {
-            throw new IllegalArgumentException("player not found", e);
-        } catch (NotAColourChangeCardException e) {
-            throw new UnoUserException("Card cannot change colour!", e);
-        } catch (NoColourSelectedException e) {
-            throw new UnoUserException("You have not selected a colour", e);
-        } catch (CannotPlayCardException e) {
-            throw new UnoUserException("Cannot play card", e);
+            card = controller.playCard(playerId, cardId, colour);
+        } catch (CardNotFoundException | NoColourSelectedException | NotAColourChangeCardException |
+                 PlayerNotFoundException | CannotPlayCardException | GameNotStartedException e) {
+            ExceptionLogger.logGameException(e);
+            throw new UnoUserException(e.getMessage(), e);
         }
 
         controller.nextTurn();
 
-        return SUCCESS_STRING;
+        return card;
     }
 }

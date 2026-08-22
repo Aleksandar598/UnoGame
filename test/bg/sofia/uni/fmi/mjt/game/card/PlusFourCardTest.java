@@ -19,7 +19,7 @@ class PlusFourCardTest {
 
     private PlusFourCard card;
     private static final CardColour CHOSEN_COLOUR = CardColour.BLUE;
-    private static final CardColour CARD_COLOUR = CardColour.SPECIAL;
+    private static final CardColour CARD_COLOUR = CardColour.NOT_SELECTED;
     private static final CardType CARD_TYPE = CardType.PLUS_FOUR_CARD;
     private static final int CARD_ID = 1;
 

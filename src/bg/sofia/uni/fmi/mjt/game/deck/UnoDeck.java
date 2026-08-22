@@ -48,6 +48,17 @@ public class UnoDeck implements Deck {
         return pile.getLast();
     }
 
+    @Override
+    public void returnCards(List<Card> cards) {
+        if (cards == null) {
+            throw new IllegalArgumentException("cards cannot be null");
+        }
+
+        List<Card> returnedCards = new ArrayList<>(cards);
+        Collections.shuffle(returnedCards);
+        draw.addAll(returnedCards);
+    }
+
     private void recyclePile() {
         Card topCard = pile.removeLast();
 

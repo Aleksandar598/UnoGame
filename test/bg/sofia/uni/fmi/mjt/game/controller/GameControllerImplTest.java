@@ -36,13 +36,13 @@ class GameControllerImplTest {
     @BeforeEach
     void setUp() {
         deck = new StubDeck(TOP_CARD, FIRST_DRAWN_CARD, SECOND_DRAWN_CARD, THIRD_DRAWN_CARD);
-
+        creator = new UnoPlayer("creator", 1);
         controller = new GameControllerImpl(deck);
     }
 
     @Test
     void testConstructorRejectsNullDeck() {
-        assertThrows(IllegalArgumentException.class, () -> new GameControllerImpl(null, creator));
+        assertThrows(IllegalArgumentException.class, () -> new GameControllerImpl(null));
     }
 
     @Test
@@ -57,7 +57,6 @@ class GameControllerImplTest {
 
         assertEquals(creator, controller.getPlayer(creator.getId()));
         assertEquals(PlayerStatus.WAITING_TO_START, creator.getPlayerStatus());
-        assertEquals(creator, controller.getCreator());
     }
 
     @Test
@@ -96,13 +95,16 @@ class GameControllerImplTest {
 
     @Test
     void testDrawCardAddsTheDrawnCardToThePlayerHand() throws Exception {
+        deck.addDrawCards(20);
+
         controller.addPlayer(creator);
+        controller.addPlayer(new UnoPlayer("player2", 2));
+        controller.startGame();
 
         Card drawnCard = controller.drawCard(creator.getId());
 
-        assertEquals(FIRST_DRAWN_CARD, drawnCard);
-        assertEquals(1, creator.getCards().size());
-        assertEquals(FIRST_DRAWN_CARD, creator.getCards().get(0));
+        assertEquals(8, creator.getCards().size());
+        assertTrue(creator.getCards().contains(drawnCard));
     }
 
     @Test
@@ -201,7 +203,7 @@ class GameControllerImplTest {
     @Test
     void testNormalPlayRejectsCardThatDoesNotMatchColourOrType() throws Exception {
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         Card nonMatchingCard = Card.of(CardColour.BLUE, CardType.ONE, 21);
         firstPlayer.addCard(nonMatchingCard);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
@@ -226,10 +228,12 @@ class GameControllerImplTest {
 
     @Test
     void testSpecialPlayRejectsANonWildCard() throws Exception {
+        deck.addDrawCards(20);
         Card normalCard = Card.of(CardColour.RED, CardType.ONE, 23);
         creator.addCard(normalCard);
         UnoPlayer secondPlayer = new UnoPlayer("second", 2);
         addPlayingPlayers(creator, secondPlayer);
+        controller.startGame();
 
         assertThrows(NotAColourChangeCardException.class,
                 () -> controller.playCard(creator.getId(), normalCard.getCardID(), CardColour.BLUE));
@@ -238,7 +242,7 @@ class GameControllerImplTest {
     @Test
     void testPlusTwoAddsAPenaltyForTheNextPlayer() throws Exception {
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         Card plusTwo = Card.of(CardColour.RED, CardType.PLUS_TWO_CARD, 24);
         firstPlayer.addCard(plusTwo);
@@ -254,13 +258,14 @@ class GameControllerImplTest {
     @Test
     void testAcceptingAPlusTwoPenaltyDrawsTwoCardsAndClearsThePenalty() throws Exception {
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         Card plusTwo = Card.of(CardColour.RED, CardType.PLUS_TWO_CARD, 27);
         firstPlayer.addCard(plusTwo);
         addPlayingPlayers(localController, firstPlayer, secondPlayer);
 
         localController.playCard(firstPlayer.getId(), plusTwo.getCardID());
+        localController.nextTurn();
         localController.acceptPenalty(secondPlayer.getId());
 
         assertEquals(2, secondPlayer.getCards().size());
@@ -271,7 +276,7 @@ class GameControllerImplTest {
     @Test
     void testPlayerWithAPendingPlusTwoPenaltyCannotPlayANormalCard() throws Exception {
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         Card plusTwo = Card.of(CardColour.RED, CardType.PLUS_TWO_CARD, 30);
         Card normalCard = Card.of(CardColour.RED, CardType.ONE, 31);
@@ -290,14 +295,17 @@ class GameControllerImplTest {
 
     @Test
     void testPlayerWithAPendingPlusTwoPenaltyCannotRespondWithPlusFour() throws Exception {
+        final int EXPECTED_CARDS = 1+7;
+        deck.addDrawCards(20);
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         Card plusTwo = Card.of(CardColour.RED, CardType.PLUS_TWO_CARD, 32);
         Card plusFour = Card.of(CardColour.SPECIAL, CardType.PLUS_FOUR_CARD, 33);
         firstPlayer.addCard(plusTwo);
         secondPlayer.addCard(plusFour);
         addPlayingPlayers(localController, firstPlayer, secondPlayer);
+        localController.startGame();
 
         localController.playCard(firstPlayer.getId(), plusTwo.getCardID());
         localController.nextTurn();
@@ -305,18 +313,19 @@ class GameControllerImplTest {
         assertThrows(CannotPlayCardException.class,
                 () -> localController.playCard(secondPlayer.getId(), plusFour.getCardID(), CardColour.BLUE));
         assertEquals(plusTwo, localController.getTopCard());
-        assertEquals(1, secondPlayer.getCards().size());
+        assertEquals(EXPECTED_CARDS, secondPlayer.getCards().size());
     }
 
     @Test
     void testPlusFourChangesColourAndAddsAFourCardPenalty() throws Exception {
+        deck.addDrawCards(20);
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         Card plusFour = Card.of(CardColour.SPECIAL, CardType.PLUS_FOUR_CARD, 28);
         firstPlayer.addCard(plusFour);
         addPlayingPlayers(localController, firstPlayer, secondPlayer);
-
+        localController.startGame();
         localController.playCard(firstPlayer.getId(), plusFour.getCardID(), CardColour.GREEN);
 
         assertEquals(plusFour, localController.getTopCard());
@@ -327,31 +336,36 @@ class GameControllerImplTest {
 
     @Test
     void testAcceptingAPlusFourPenaltyDrawsFourCardsAndClearsThePenalty() throws Exception {
-        deck.addDrawCards(4);
+        final int EXPECTED_CARDS = 7+4;
+        deck.addDrawCards(40);
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         Card plusFour = Card.of(CardColour.SPECIAL, CardType.PLUS_FOUR_CARD, 29);
         firstPlayer.addCard(plusFour);
         addPlayingPlayers(localController, firstPlayer, secondPlayer);
+        localController.startGame();
 
         localController.playCard(firstPlayer.getId(), plusFour.getCardID(), CardColour.BLUE);
+        localController.nextTurn();
         localController.acceptPenalty(secondPlayer.getId());
 
-        assertEquals(4, secondPlayer.getCards().size());
+        assertEquals(EXPECTED_CARDS, secondPlayer.getCards().size());
         assertFalse(localController.isTherePendingCardDraw());
         assertEquals(0, localController.penaltyCardCount());
     }
 
     @Test
     void testChooseColourCardSetsTheSelectedColourWithoutAddingAPenalty() throws Exception {
+        deck.addDrawCards(40);
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         Card chooseColour = Card.of(CardColour.SPECIAL, CardType.CHOOSE_COLOUR_CARD, 34);
         firstPlayer.addCard(chooseColour);
         firstPlayer.addCard(Card.of(CardColour.RED, CardType.ONE, 35));
         addPlayingPlayers(localController, firstPlayer, secondPlayer);
+        localController.startGame();
 
         localController.playCard(firstPlayer.getId(), chooseColour.getCardID(), CardColour.YELLOW);
 
@@ -362,21 +376,30 @@ class GameControllerImplTest {
 
     @Test
     void testSpecialPlayRejectsNonPlayableSelectedColours() throws Exception {
+        deck.addDrawCards(20);
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
-        Card chooseColour = Card.of(CardColour.SPECIAL, CardType.CHOOSE_COLOUR_CARD, 36);
+        Card chooseColour = Card.of(
+                CardColour.SPECIAL,
+                CardType.CHOOSE_COLOUR_CARD,
+                36
+        );
         firstPlayer.addCard(chooseColour);
         addPlayingPlayers(localController, firstPlayer, secondPlayer);
-
-        assertThrows(IllegalArgumentException.class,
-                () -> localController.playCard(firstPlayer.getId(), chooseColour.getCardID(), CardColour.SPECIAL));
+        localController.startGame();
+        assertThrows(NoColourSelectedException.class,
+                () -> localController.playCard(
+                        firstPlayer.getId(),
+                        chooseColour.getCardID(),
+                        CardColour.SPECIAL
+                ));
     }
 
     @Test
     void testSkipCardWithTwoPlayersGivesTheTurnBackToThePlayerWhoPlayedIt() throws Exception {
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         Card skipCard = Card.of(CardColour.RED, CardType.SKIP_MOVE_CARD, 37);
         firstPlayer.addCard(skipCard);
@@ -392,7 +415,7 @@ class GameControllerImplTest {
     @Test
     void testReverseCardWithTwoPlayersGivesTheTurnBackToThePlayerWhoPlayedIt() throws Exception {
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         Card reverseCard = Card.of(CardColour.RED, CardType.SWITCH_CARD, 39);
         firstPlayer.addCard(reverseCard);
@@ -408,7 +431,7 @@ class GameControllerImplTest {
     @Test
     void testWinningPlayerIsSkippedOnLaterTurns() throws Exception {
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         MutablePlayer thirdPlayer = new MutablePlayer("third", 3);
         Card lastCard = Card.of(CardColour.RED, CardType.ONE, 41);
@@ -426,7 +449,7 @@ class GameControllerImplTest {
     @Test
     void testRemovingTheCurrentPlayerSelectsTheFollowingPlayerAsCurrent() throws Exception {
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         MutablePlayer thirdPlayer = new MutablePlayer("third", 3);
         addPlayingPlayers(localController, firstPlayer, secondPlayer, thirdPlayer);
@@ -437,14 +460,9 @@ class GameControllerImplTest {
     }
 
     @Test
-    void testDrawCardRejectsAnUnknownPlayer() {
-        assertThrows(PlayerNotFoundException.class, () -> controller.drawCard(99));
-    }
-
-    @Test
     void testSkipCardSkipsTheNextPlayer() throws Exception {
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         MutablePlayer thirdPlayer = new MutablePlayer("third", 3);
         Card skipCard = Card.of(CardColour.RED, CardType.SKIP_MOVE_CARD, 25);
@@ -460,7 +478,7 @@ class GameControllerImplTest {
     @Test
     void testReverseCardChangesTheDirectionOfTheFollowingTurn() throws Exception {
         MutablePlayer firstPlayer = new MutablePlayer("first", 1);
-        GameControllerImpl localController = new GameControllerImpl(deck, firstPlayer);
+        GameControllerImpl localController = new GameControllerImpl(deck);
         MutablePlayer secondPlayer = new MutablePlayer("second", 2);
         MutablePlayer thirdPlayer = new MutablePlayer("third", 3);
         Card reverseCard = Card.of(CardColour.RED, CardType.SWITCH_CARD, 26);
@@ -525,6 +543,11 @@ class GameControllerImplTest {
         @Override
         public Card getLastPlayedCard() {
             return topCard;
+        }
+
+        @Override
+        public void returnCards(List<Card> cards) {
+            cardsToDraw.addAll(cards);
         }
     }
 

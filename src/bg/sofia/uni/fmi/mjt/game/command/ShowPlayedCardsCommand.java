@@ -6,14 +6,13 @@ import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 public class ShowPlayedCardsCommand implements GameCommand {
 
     private final GameController controller;
-    private final int playerId;
-    public ShowPlayedCardsCommand(GameController controller, int playerId) {
+
+    public ShowPlayedCardsCommand(GameController controller) {
         if (controller == null) {
             throw new IllegalArgumentException("controller cannot be null");
         }
 
         this.controller = controller;
-        this.playerId = playerId;
     }
 
     @Override

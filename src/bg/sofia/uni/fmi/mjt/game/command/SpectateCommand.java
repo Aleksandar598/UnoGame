@@ -8,9 +8,9 @@ import bg.sofia.uni.fmi.mjt.player.PlayerStatus;
 
 public class SpectateCommand implements GameCommand {
 
-    private int playerId;
-    private GameController controller;
-    private static final String SUCESS_STRING = "Now spectating";
+    private final int playerId;
+    private final GameController controller;
+    private static final String SUCCESS_STRING = "Now spectating";
 
     public SpectateCommand(GameController controller, int playerId) {
         this.playerId = playerId;
@@ -36,6 +36,6 @@ public class SpectateCommand implements GameCommand {
         } catch (PlayerNotFoundException e) {
             throw new UnoUserException("You are not in the game", e);
         }
-        return SUCESS_STRING;
+        return SUCCESS_STRING;
     }
 }

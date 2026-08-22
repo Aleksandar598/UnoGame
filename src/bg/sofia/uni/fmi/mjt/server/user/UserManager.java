@@ -9,12 +9,15 @@ import bg.sofia.uni.fmi.mjt.server.exception.UserAlreadyLoggedInException;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.util.Collection;
+import java.util.Set;
 
 public interface UserManager {
 
     String register(String username, String password) throws UserAlreadyExistsException;
 
-    String login(String username, String password, SocketChannel channel) throws WrongUserCredentialsException, UserAlreadyLoggedInException;
+    String login(String username, String password, SocketChannel channel) throws WrongUserCredentialsException,
+                                                                                UserAlreadyLoggedInException;
 
     void logout(SocketChannel channel);
 
@@ -29,4 +32,7 @@ public interface UserManager {
     void unbindPlayer(SocketChannel channel);
 
     void save() throws IOException;
+
+    Set<SocketChannel> getConnectedSockets(Collection<Integer> playerIds);
+
 }

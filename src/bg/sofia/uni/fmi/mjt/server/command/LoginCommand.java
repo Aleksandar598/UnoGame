@@ -15,7 +15,8 @@ import java.util.Map;
 
 public class LoginCommand extends AbstractCommand {
 
-    ArgumentsParser argumentsParser = new ArgumentsParserImpl();
+    private final ArgumentsParser argumentsParser;
+    private final UserManager userManager;
     private String username;
     private String password;
     private static final String SUCCESS_STRING = "Login Successful";
@@ -24,11 +25,22 @@ public class LoginCommand extends AbstractCommand {
     private static final String NOT_ENOUGH_PARAMETERS = "Need both username and password";
     private static final String USER_ALREADY_LOGGED_IN = "User with this profile is already logged in";
 
+    public LoginCommand() {
+        this(UserManagerImpl.getInstance(), new ArgumentsParserImpl());
+    }
+
+    LoginCommand(UserManager userManager, ArgumentsParser argumentsParser) {
+        if (userManager == null || argumentsParser == null) {
+            throw new IllegalArgumentException("Dependencies cannot be null");
+        }
+        this.userManager = userManager;
+        this.argumentsParser = argumentsParser;
+    }
+
     @Override
     public String execute(String input, SocketChannel socket) throws IOException {
         try {
             parse(input);
-            UserManager userManager = UserManagerImpl.getInstance();
             if (userManager.isLoggedIn(socket)) {
                 return ALREADY_LOGGED_STRING;
             }

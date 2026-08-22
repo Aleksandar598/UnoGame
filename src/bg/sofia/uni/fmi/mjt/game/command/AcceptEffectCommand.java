@@ -1,14 +1,18 @@
 package bg.sofia.uni.fmi.mjt.game.command;
 
+import bg.sofia.uni.fmi.mjt.exception.CannotPlayCardException;
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
+import bg.sofia.uni.fmi.mjt.server.exception.ExceptionLogger;
+
+import java.io.IOException;
 
 public class AcceptEffectCommand implements GameCommand {
     private final  int playerId;
     private final GameController controller;
     
-    AcceptEffectCommand(GameController controller, int playerId) {
+    public AcceptEffectCommand(GameController controller, int playerId) {
         this.playerId = playerId;
         if (controller == null) {
             throw new IllegalArgumentException("controller cannot be null");
@@ -17,17 +21,8 @@ public class AcceptEffectCommand implements GameCommand {
     }
 
     @Override
-    public String execute() throws UnoUserException {
-        if (!controller.hasStarted()) {
-            throw new UnoUserException("Game has not started yet");
-        }
-        if (!this.controller.isTherePendingCardDraw()) {
-            throw new UnoUserException("There is no penalty pending");
-        }
+    public String execute() throws UnoUserException, IOException {
 
-        if (this.playerId != this.controller.getCurrentPlayer().getId()) {
-            throw new UnoUserException("It is not your turn to accept the penalty");
-        }
         StringBuilder response = new StringBuilder();
         response.append("Drawn ")
                 .append(controller.penaltyCardCount())
@@ -35,12 +30,12 @@ public class AcceptEffectCommand implements GameCommand {
                 .append(System.lineSeparator());
 
         try {
-            String str =  controller.acceptPenalty(this.playerId);
+            String str = controller.acceptPenalty(this.playerId);
             response.append(str);
-        } catch (PlayerNotFoundException e) {
-            throw new IllegalArgumentException("Player not found", e);
+        } catch (PlayerNotFoundException | CannotPlayCardException e) {
+            ExceptionLogger.logGameException(e);
+            throw new UnoUserException(e.getMessage(), e);
         }
-        controller.nextTurn();
         return response.toString();
     }
 }

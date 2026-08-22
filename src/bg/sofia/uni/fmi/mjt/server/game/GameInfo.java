@@ -1,7 +1,5 @@
 package bg.sofia.uni.fmi.mjt.server.game;
 
-import bg.sofia.uni.fmi.mjt.server.exception.MissingArgumentsException;
-
 import java.util.List;
 
 public record GameInfo(
@@ -48,5 +46,9 @@ public record GameInfo(
                 players.size() +
                 ", Lobby Size:" +
                 maxPlayerCount;
+    }
+
+    public List<Integer> players() {
+        return List.copyOf(players);
     }
 }

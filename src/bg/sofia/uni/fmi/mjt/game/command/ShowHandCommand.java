@@ -5,14 +5,17 @@ import bg.sofia.uni.fmi.mjt.game.card.Card;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 import bg.sofia.uni.fmi.mjt.player.Player;
+import bg.sofia.uni.fmi.mjt.server.exception.ExceptionLogger;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ShowHandCommand implements GameCommand {
 
     private final GameController controller;
     private final int playerId;
-    public ShowHandCommand(GameController controller, int playerId) throws UnoUserException {
+
+    public ShowHandCommand(GameController controller, int playerId) {
         if (controller == null) {
             throw new IllegalArgumentException("controller cannot be null");
         }
@@ -21,18 +24,18 @@ public class ShowHandCommand implements GameCommand {
     }
 
     @Override
-    public String execute() throws UnoUserException {
-        Player player;
-
+    public String execute() throws UnoUserException, IOException {
         if (!controller.hasStarted()) {
             throw new UnoUserException("Game has not started yet");
         }
 
+        Player player;
         try {
             player = controller.getPlayer(playerId);
 
         } catch (PlayerNotFoundException e) {
-            throw new UnoUserException("You are not in this game!", e);
+            ExceptionLogger.logGameException(e);
+            throw new UnoUserException("Player not in game", e);
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -43,7 +46,7 @@ public class ShowHandCommand implements GameCommand {
             stringBuilder.append(iter)
                     .append(". ")
                     .append(c.getCardAsString())
-                    .append("\n");
+                    .append(System.lineSeparator());
             iter++;
         }
         return stringBuilder.toString();

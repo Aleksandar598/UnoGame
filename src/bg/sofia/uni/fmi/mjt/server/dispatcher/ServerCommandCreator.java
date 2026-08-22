@@ -1,0 +1,8 @@
+package bg.sofia.uni.fmi.mjt.server.dispatcher;
+
+import bg.sofia.uni.fmi.mjt.server.command.Command;
+import bg.sofia.uni.fmi.mjt.server.exception.UnknownCommandException;
+
+interface ServerCommandCreator {
+    Command create(String input) throws UnknownCommandException;
+}

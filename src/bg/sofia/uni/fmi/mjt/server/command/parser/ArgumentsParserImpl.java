@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class ArgumentsParserImpl implements ArgumentsParser {
 
-
     @Override
     public Map<String, String> parse(String input) {
         Map<String, String> result = new HashMap<>();

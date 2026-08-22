@@ -21,12 +21,24 @@ public class StartGameCommand extends AbstractCommand {
     private static final String USER_NOT_CREATED = "User has not been created";
     private static final String CANNOT_START_GAME = "Cannot start game";
     private static final String GAME_HAS_STARTED = "Game has started!";
+    private final UserManager userManager;
+    private final GameManager gameManager;
+
+    public StartGameCommand() {
+        this(UserManagerImpl.getInstance(), GameManagerImpl.getInstance());
+    }
+
+    StartGameCommand(UserManager userManager, GameManager gameManager) {
+        if (userManager == null || gameManager == null) {
+            throw new IllegalArgumentException("Dependencies cannot be null");
+        }
+        this.userManager = userManager;
+        this.gameManager = gameManager;
+    }
 
     @Override
     public String execute(String input, SocketChannel socket) throws IOException {
         try {
-            UserManager userManager = UserManagerImpl.getInstance();
-            GameManager gameManager = GameManagerImpl.getInstance();
             Player player = userManager.getPlayer(socket);
             gameManager.startGame(player, userManager.getUsername(socket));
             gameManager.notifyAllInAGame(player, GAME_HAS_STARTED);

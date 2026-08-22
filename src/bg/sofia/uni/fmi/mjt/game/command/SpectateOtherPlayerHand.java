@@ -23,10 +23,14 @@ public class SpectateOtherPlayerHand implements GameCommand {
 
     @Override
     public String execute() throws UnoUserException {
+        if (!controller.hasStarted()) {
+            throw new UnoUserException("Game has not started yet");
+        }
+
         try {
             Player spectator = controller.getPlayer(playerId);
             if (spectator.getPlayerStatus() != PlayerStatus.SPECTATING) {
-                throw new UnoUserException("you cannot spectate");
+                throw new UnoUserException("You cannot spectate");
             }
             Player toSpectate = controller.getPlayer(this.wantedPlayer);
 

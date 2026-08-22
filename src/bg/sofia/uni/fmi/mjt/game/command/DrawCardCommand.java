@@ -1,9 +1,15 @@
 package bg.sofia.uni.fmi.mjt.game.command;
 
-import bg.sofia.uni.fmi.mjt.game.controller.GameController;
-import bg.sofia.uni.fmi.mjt.game.card.Card;
+import bg.sofia.uni.fmi.mjt.exception.CannotPlayCardException;
+import bg.sofia.uni.fmi.mjt.exception.GameNotStartedException;
+import bg.sofia.uni.fmi.mjt.exception.InvalidActionException;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
+import bg.sofia.uni.fmi.mjt.game.controller.GameController;
+import bg.sofia.uni.fmi.mjt.game.card.Card;
+import bg.sofia.uni.fmi.mjt.server.exception.ExceptionLogger;
+
+import java.io.IOException;
 
 public class DrawCardCommand implements GameCommand {
     private final int playerId;
@@ -18,23 +24,15 @@ public class DrawCardCommand implements GameCommand {
     }
 
     @Override
-    public String execute() throws UnoUserException {
-
+    public String execute() throws UnoUserException, IOException {
         try {
-            if (controller.checkPlayerCanPlayAnyCards(playerId)) {
-                throw new UnoUserException("You can play a card");
-            }
-            if (!controller.hasStarted()) {
-                throw new UnoUserException("Game has not started yet");
-            }
-            Card c = controller.drawCard(playerId);
-            StringBuilder drawnCard = new StringBuilder();
-            drawnCard.append("Card drawn: ")
-                    .append(c.getCardAsString());
-            controller.nextTurn();
-            return drawnCard.toString();
-        } catch (PlayerNotFoundException e) {
-            throw new UnoUserException("Player not found", e);
+            Card card = controller.drawCard(playerId);
+            return "Card drawn: " + card.getCardAsString();
+        } catch (PlayerNotFoundException | CannotPlayCardException |
+                 GameNotStartedException | InvalidActionException e) {
+            ExceptionLogger.logException(e);
+            throw new UnoUserException(e.getMessage(), e);
         }
     }
 }
+
