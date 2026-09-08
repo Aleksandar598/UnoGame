@@ -1,5 +1,6 @@
 package bg.sofia.uni.fmi.mjt.game.command;
 
+import bg.sofia.uni.fmi.mjt.command.gameCommand.SpectateCommand;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;

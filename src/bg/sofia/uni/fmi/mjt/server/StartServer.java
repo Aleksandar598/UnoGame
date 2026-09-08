@@ -1,7 +1,5 @@
 package bg.sofia.uni.fmi.mjt.server;
 
-import bg.sofia.uni.fmi.mjt.server.network.UnoServer;
-
 import java.io.IOException;
 
 public final class StartServer {

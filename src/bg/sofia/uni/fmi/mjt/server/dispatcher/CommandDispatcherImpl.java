@@ -1,8 +1,8 @@
 package bg.sofia.uni.fmi.mjt.server.dispatcher;
 
-import bg.sofia.uni.fmi.mjt.server.command.Command;
-import bg.sofia.uni.fmi.mjt.server.command.InGameCommand;
-import bg.sofia.uni.fmi.mjt.server.command.factory.CommandFactory;
+import bg.sofia.uni.fmi.mjt.command.serverCommand.Command;
+import bg.sofia.uni.fmi.mjt.command.serverCommand.InGameCommand;
+import bg.sofia.uni.fmi.mjt.command.serverCommand.factory.CommandFactory;
 import bg.sofia.uni.fmi.mjt.server.exception.UnknownCommandException;
 import bg.sofia.uni.fmi.mjt.server.user.UserManager;
 import bg.sofia.uni.fmi.mjt.server.user.UserManagerImpl;

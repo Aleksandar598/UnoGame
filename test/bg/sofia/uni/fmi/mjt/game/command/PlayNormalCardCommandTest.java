@@ -1,12 +1,12 @@
 package bg.sofia.uni.fmi.mjt.game.command;
 
+import bg.sofia.uni.fmi.mjt.command.gameCommand.PlayNormalCardCommand;
 import bg.sofia.uni.fmi.mjt.exception.CannotPlayCardException;
 import bg.sofia.uni.fmi.mjt.exception.CardNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.NoColourSelectedException;
 import bg.sofia.uni.fmi.mjt.exception.PlayerNotFoundException;
 import bg.sofia.uni.fmi.mjt.exception.UnoUserException;
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;
-import bg.sofia.uni.fmi.mjt.game.controller.GameControllerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

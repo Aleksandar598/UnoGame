@@ -1,5 +1,6 @@
 package bg.sofia.uni.fmi.mjt.game.command;
 
+import bg.sofia.uni.fmi.mjt.command.gameCommand.GetCurrentColourCommand;
 import bg.sofia.uni.fmi.mjt.game.card.CardColour;
 import bg.sofia.uni.fmi.mjt.game.controller.GameController;
 import org.junit.jupiter.api.BeforeEach;
