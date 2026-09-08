@@ -19,6 +19,7 @@ import static org.mockito.Mockito.when;
 
 class CommandDispatcherImplTest {
     private static final String INPUT_LOGIN = "login --username=user --password=password";
+    private static final String INPUT_HELP = "help";
     private static final String INPUT_LIST_GAMES = "list-games";
     private static final String INPUT_GAME_COMMAND = "show-hand";
     private static final String EXPECTED_BLANK_COMMAND = "Command cannot be blank";
@@ -62,6 +63,17 @@ class CommandDispatcherImplTest {
         assertEquals(EXPECTED_SERVER_COMMAND_RESPONSE, response);
         verify(userManager, never()).isLoggedIn(socket);
         verify(serverCommand).execute(INPUT_LOGIN, socket);
+    }
+
+    @Test
+    void testAllowsHelpWithoutCheckingLoggedInStatus() throws Exception {
+        when(serverCommandCreator.create(INPUT_HELP)).thenReturn(serverCommand);
+        when(serverCommand.execute(INPUT_HELP, socket)).thenReturn(EXPECTED_SERVER_COMMAND_RESPONSE);
+
+        assertEquals(EXPECTED_SERVER_COMMAND_RESPONSE, dispatcher.dispatch(INPUT_HELP, socket));
+
+        verify(userManager, never()).isLoggedIn(socket);
+        verify(serverCommand).execute(INPUT_HELP, socket);
     }
 
     @Test

@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class CommandDispatcherImpl implements CommandDispatcher {
 
-    private static final Set<String> COMMANDS_WHICH_DO_NOT_REQUIRE_LOGIN = Set.of("login", "register");
+    private static final Set<String> COMMANDS_WHICH_DO_NOT_REQUIRE_LOGIN = Set.of("help", "login", "register");
     private final UserManager userManager;
     private final ServerCommandCreator serverCommandCreator;
     private final Command inGameCommand;

@@ -2,6 +2,7 @@ package bg.sofia.uni.fmi.mjt.command.serverCommand.factory;
 
 import bg.sofia.uni.fmi.mjt.command.serverCommand.Command;
 import bg.sofia.uni.fmi.mjt.command.serverCommand.CreateGameCommand;
+import bg.sofia.uni.fmi.mjt.command.serverCommand.HelpCommand;
 import bg.sofia.uni.fmi.mjt.command.serverCommand.JoinGameCommand;
 import bg.sofia.uni.fmi.mjt.command.serverCommand.LeaveGameCommand;
 import bg.sofia.uni.fmi.mjt.command.serverCommand.ListGamesCommand;
@@ -26,6 +27,7 @@ public class CommandFactory {
         String commandName = getCommandString(input);
         return switch (commandName) {
             case "register" -> new RegisterCommand();
+            case "help" -> new HelpCommand();
             case "login" -> new LoginCommand();
             case "logout" -> new LogoutCommand();
             case "list-games" -> new ListGamesCommand();
