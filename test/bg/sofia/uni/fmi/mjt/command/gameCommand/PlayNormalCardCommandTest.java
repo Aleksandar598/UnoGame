@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.game.command;
+package bg.sofia.uni.fmi.mjt.command.gameCommand;
 
 import bg.sofia.uni.fmi.mjt.command.gameCommand.PlayNormalCardCommand;
 import bg.sofia.uni.fmi.mjt.exception.CannotPlayCardException;

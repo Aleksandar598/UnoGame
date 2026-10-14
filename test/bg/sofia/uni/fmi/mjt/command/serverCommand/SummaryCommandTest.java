@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.server.serverCommand;
+package bg.sofia.uni.fmi.mjt.command.serverCommand;
 
 import bg.sofia.uni.fmi.mjt.command.serverCommand.SummaryCommand;
 import bg.sofia.uni.fmi.mjt.command.serverCommand.parser.ArgumentsParserImpl;

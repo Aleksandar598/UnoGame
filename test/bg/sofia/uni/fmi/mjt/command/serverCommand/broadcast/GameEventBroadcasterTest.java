@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.server.serverCommand.broadcast;
+package bg.sofia.uni.fmi.mjt.command.serverCommand.broadcast;
 
 import bg.sofia.uni.fmi.mjt.command.serverCommand.broadcast.GameEventBroadcaster;
 import bg.sofia.uni.fmi.mjt.player.Player;

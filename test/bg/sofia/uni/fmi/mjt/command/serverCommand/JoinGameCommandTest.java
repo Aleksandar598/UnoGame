@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.server.serverCommand;
+package bg.sofia.uni.fmi.mjt.command.serverCommand;
 
 import bg.sofia.uni.fmi.mjt.command.serverCommand.JoinGameCommand;
 import bg.sofia.uni.fmi.mjt.exception.MaximumPlayerCountReached;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class JoinGameCommandTest {
-    private static final String EXPECTED_SUCCESSFUL_JOIN = "successfully joined game";
+    private static final String EXPECTED_SUCCESSFUL_JOIN = "Successfully joined game";
     private static final String EXPECTED_INVALID_ARGS = "Invalid arguments";
     private static final String EXPECTED_GAME_FULL = "Game you want to join is full";
     private static final String EXPECTED_GAME_HAS_STARTED = "Game has already started";
@@ -52,7 +52,7 @@ class JoinGameCommandTest {
 
         assertEquals(EXPECTED_SUCCESSFUL_JOIN, response);
         verify(gameManager).joinGame("game1", player);
-        verify(gameManager).notifyAllInAGame(player, "Player one" + EXPECTED_SUCCESSFUL_JOIN);
+        verify(gameManager).notifyAllInAGame(player, "Player one " + EXPECTED_SUCCESSFUL_JOIN);
     }
 
     @Test
