@@ -1,6 +1,6 @@
 # UNO Game
 
-A multiplayer command-line UNO game written in Java. A non-blocking server accepts multiple clients, manages user sessions and game lobbies, and relays game events to players.
+A client-server multiplayer command-line UNO game written in Java. A non-blocking server accepts multiple clients, manages user sessions and game lobbies, and relays game events to players.
 
 ## Requirements
 
