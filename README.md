@@ -3,15 +3,13 @@
 A client-server multiplayer command-line UNO game written in Java. A non-blocking server accepts multiple clients, manages user sessions and game lobbies, and relays game events to players.
 
 ## Requirements
-
-- IntelliJ IDEA
 - JDK 25, which is the JDK currently configured for this project
 
 The project bundles its test libraries in the `lib/` directory.
 
 ## Run the game
 
-1. Open the project in IntelliJ IDEA and set the project SDK to JDK 25.
+1. Open the project in your IDE.
 2. Run `bg.sofia.uni.fmi.mjt.server.StartServer`. The server listens on port `7777` by default.
 3. Run `bg.sofia.uni.fmi.mjt.client.UnoClient` in one or more separate run configurations.
 4. Type `help` in a client to see the available commands.
@@ -23,7 +21,7 @@ Server: StartServer 8888
 Client: UnoClient localhost 8888
 ```
 
-In IntelliJ, enable **Allow multiple instances** in the client run configuration to launch several clients at once.
+In your IDE, enable **Allow multiple instances** in the client run configuration to launch several clients at once.
 
 Type `exit` in a client to close its session.
 
